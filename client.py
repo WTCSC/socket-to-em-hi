@@ -1,135 +1,36 @@
 import socket
-from gacha import GachaGame
-
-# Create a socket object
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# Bind to 0.0.0.0:5000
-server.bind(('0.0.0.0', 5000))
-
-# Listen for connections
-server.listen(1)
-print("Waiting for connection...")
-
-# Accept client connection
-client, addr = server.accept()
-print(f"Connected to {addr}")
-
 
 def main():
-    GachaGame.display_intro()
-    gacha_num = get_gacha_option()
-    while gacha_num > 0:
-        print("Choose what you want to draw:")
-        print("1. Character")
-        print("2. Weapon")
-        print("3. Exit")
-        option = int(input())
+    # Create a socket object
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        if option == 1:
-            banners = f"{character_banner_art}"
-            print(banners)
-            banner_option = int(input("Choose a banner (1 for Fantasy, 2 for Ocean): "))
+    # Connect to server
+    client.connect(('localhost', 5000))  # Replace 'localhost' with the server's IP address if needed
+    print("Connected to server")
 
-            if banner_option == 1:
-                print(f"{fantasy_banner}")
-                draw_option = int(input("Do you want to do 1 or 10 draws? "))
+    # Receive and print welcome message
+    welcome_message = client.recv(1024).decode('utf-8')
+    print(welcome_message)
 
-                if draw_option == 1:
-                    draw_animation()
-                    gacha_num -= 1
-                    if gacha_num > 0:
-                        rarity = char_gacha()
-                        if rarity == 5:
-                            get_5_star_fantasy_character()
-                        elif rarity == 4:
-                            get_4_star_character()
-                        elif rarity == 3:
-                            get_3_star_character()
-                        
-                elif draw_option == 10:
-                    if gacha_num >= 10:
-                        gacha_num -= 10
-                        for i in range(10):
-                            rarity = char_gacha()
-                            if rarity == 5:
-                                get_5_star_fantasy_character()
-                            elif rarity == 4:
-                                get_4_star_character()
-                            elif rarity == 3:
-                                get_3_star_character()
-                    else:
-                        print("You don't have enough draws. Please do single draws.")
+    while True:
+        # Receive prompt from server
+        prompt = client.recv(1024).decode('utf-8')
+        print(prompt, end='')
 
-            if banner_option == 2:
-                print(f"{ocean_banner}")
-                draw_option = int(input("Do you want to do 1 or 10 draws? "))
+        # Get user input and send to server
+        user_input = input()
+        client.send(user_input.encode('utf-8'))
 
-                if draw_option == 1:
-                    gacha_num -= 1
-                    draw_animation()
-                    if gacha_num > 0:
-                        rarity = char_gacha()
-                        if rarity == 5:
-                            get_5_star_ocean_character()
-                        elif rarity == 4:
-                            get_4_star_character()
-                        elif rarity == 3:
-                            get_3_star_character()
-                        
-                elif draw_option == 10:
-                    if gacha_num >= 10:
-                        gacha_num -= 10
-                        for i in range(10):
-                            rarity = char_gacha()
-                            if rarity == 5:
-                                get_5_star_ocean_character()
-                            elif rarity == 4:
-                                get_4_star_character()
-                            elif rarity == 3:
-                                get_3_star_character()
-                    else:
-                        print("You don't have enough draws. Please do single draws.")
+        # Receive and print server response
+        response = client.recv(1024).decode('utf-8')
+        print(response)
 
-        elif option == 2:
-            print(f"{weapon_banner}")
-            draw_option = int(input("Do you want to do 1 or 10 draws? "))
-            if draw_option == 1:
-                gacha_num -= 1
-                draw_animation()
-                if gacha_num > 0:
-                    rarity = weapon_gacha()
-                    if rarity == 5:
-                        get_5_star_weapon()
-                    elif rarity == 4:
-                        get_4_star_weapon()
-                    elif rarity == 3:
-                        get_3_star_weapon()
-                        
-            elif draw_option == 10:
-                if gacha_num >= 10:
-                    gacha_num -= 10
-                    for i in range(10):
-                        rarity = weapon_gacha()
-                        if rarity == 5:
-                            get_5_star_weapon()
-                        elif rarity == 4:
-                            get_4_star_weapon()
-                        elif rarity == 3:
-                            get_3_star_weapon()
-                else:
-                    print("You don't have enough draws. Please do single draws.")
-
-        elif option == 3:
+        # Check if the server has indicated the end of the game
+        if "Summon Complete!" in response:
             break
 
-
-    print(f"HI!")
-
+    # Close the connection
+    client.close()
 
 if __name__ == "__main__":
     main()
-
-    
-client.close()
-server.close()
