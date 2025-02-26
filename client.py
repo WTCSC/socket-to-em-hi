@@ -5,7 +5,9 @@ def main():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Connect to server
-    client.connect(('localhost', 5000))  # Replace 'localhost' with the server's IP address if needed
+    ip_address = input("Enter the server's IP address: ")
+    port = int(input("Enter the server's port number: "))
+    client.connect((ip_address, port))
     print("Connected to server")
 
     # Receive and print welcome message
@@ -26,7 +28,7 @@ def main():
         print(response)
 
         # Check if the server has indicated the end of the game
-        if "Summon Complete!" in response:
+        if "Summon Complete!" in response or "Exit" in response:
             break
 
     # Close the connection

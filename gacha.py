@@ -4,8 +4,11 @@ import os
 
 class GachaGame:
     def display_intro():
-        print("Welcome to Generic Gacha Game!\n")
-        print("If you're lucky you will have a nice time, if not give up.\n")
+        intro_message = (
+            "Welcome to Generic Gacha Game!\n"
+            "If you're lucky you will have a nice time, if not give up.\n"
+        )
+        return intro_message
 
     character_banner_art = """
         ☆ ✦ ✧ ✦ ☆ ✦ ✧ ✦ ☆ ✦                                       🌊 ~ ~ ~ 🌊 ~ ~ ~ 🌊 ~ ~ ~ 🌊    

@@ -3,8 +3,11 @@ import time
 import os
 
 def display_intro():
-    print("Welcome to Generic Gacha Game!\n")
-    print("If you're lucky you will have a nice time, if not give up.\n")
+    intro_message = (
+        "Welcome to Gacha Game!\n"
+        "If you're lucky you will have a nice time, if not give up.\n"
+    )
+    return intro_message
 
 character_banner_art = """
       ☆ ✦ ✧ ✦ ☆ ✦ ✧ ✦ ☆ ✦                                       🌊 ~ ~ ~ 🌊 ~ ~ ~ 🌊 ~ ~ ~ 🌊    
@@ -168,11 +171,12 @@ def draw_animation():
 # Functions
 
 def get_gacha_option():
-    try:
-        gacha_num = int(input("Enter the number of draws you want (this will be for both you and your opponent): "))
-        return gacha_num
-    except ValueError:
-        print("Invalid input. Please enter a valid number.")
+    while True:
+        try:
+            gacha_num = int(input("Enter the number of draws you want (this will be for both you and your opponent): "))
+            return gacha_num
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
 
 def char_gacha():
     number = random.randint(1, 1000)
@@ -289,22 +293,40 @@ def get_3_star_weapon():
         print("You got Lunchly! (3 Star)")
         return "Lunchly", 8, "Mr Beest"
 
-def damage_calculation(weapon_damage, character_strength):
-    return weapon_damage + character_strength
+def damage_calculation(damage_bonus, character_strength):
+    return damage_bonus + character_strength
 
+def health_calculation(health_bonus, character_health):
+    return health_bonus + character_health
 
+def special_move(character_name, special_move, special_cooldown):
+    print(f"{character_name} uses {special_move}!")
 
 
 def main():
     display_intro()
-    gacha_num = get_gacha_option()
+    gacha_num = get_gacha_option() + 1
+    
+    # Initialize player inventories
+    player_characters = {
+        5: [],
+        4: [],
+        3: []
+    }
+    player_weapons = {
+        5: [],
+        4: [],
+        3: []
+    }
+
     while gacha_num > 0:
         print("Choose what you want to see:")
         print("1. Character Banner")
         print("2. Weapon Banner")
         print("3. Banner Details")
         print("4. Game Guide")
-        print("5. Exit")
+        print("5. Battle")
+        print("6. Exit")
         option = int(input())
 
         if option == 1:
@@ -317,28 +339,33 @@ def main():
                 draw_option = int(input("Do you want to do 1 or 10 draws? "))
 
                 if draw_option == 1:
-                    draw_animation()
-                    gacha_num -= 1
-                    if gacha_num > 0:
+                    if gacha_num > 1:
+                        draw_animation()
                         rarity = char_gacha()
                         if rarity == 5:
-                            get_5_star_fantasy_character()
+                            character = get_5_star_fantasy_character()
                         elif rarity == 4:
-                            get_4_star_character()
+                            character = get_4_star_character()
                         elif rarity == 3:
-                            get_3_star_character()
+                            character = get_3_star_character()
+                        player_characters[rarity].append(character)
+                        gacha_num -= 1
+                    else:
+                        print("You don't have anymore draws. Please play the game.")
+                        
                         
                 elif draw_option == 10:
                     if gacha_num >= 10:
-                        gacha_num -= 10
                         for i in range(10):
                             rarity = char_gacha()
                             if rarity == 5:
-                                get_5_star_fantasy_character()
+                                character = get_5_star_fantasy_character()
                             elif rarity == 4:
-                                get_4_star_character()
+                                character = get_4_star_character()
                             elif rarity == 3:
-                                get_3_star_character()
+                                character = get_3_star_character()
+                            player_characters[rarity].append(character)
+                        gacha_num -= 10
                     else:
                         print("You don't have enough draws. Please do single draws.")
 
@@ -347,28 +374,32 @@ def main():
                 draw_option = int(input("Do you want to do 1 or 10 draws? "))
 
                 if draw_option == 1:
-                    gacha_num -= 1
-                    draw_animation()
-                    if gacha_num > 0:
+                    if gacha_num > 1:
+                        draw_animation()
                         rarity = char_gacha()
                         if rarity == 5:
-                            get_5_star_ocean_character()
+                            character = get_5_star_ocean_character()
                         elif rarity == 4:
-                            get_4_star_character()
+                            character = get_4_star_character()
                         elif rarity == 3:
-                            get_3_star_character()
+                            character = get_3_star_character()
+                        player_characters[rarity].append(character)
+                        gacha_num -= 1
+                    else:
+                        print("You don't have any more draws. Please play the game.")
                         
                 elif draw_option == 10:
                     if gacha_num >= 10:
-                        gacha_num -= 10
                         for i in range(10):
                             rarity = char_gacha()
                             if rarity == 5:
-                                get_5_star_ocean_character()
+                                character = get_5_star_ocean_character()
                             elif rarity == 4:
-                                get_4_star_character()
+                                character = get_4_star_character()
                             elif rarity == 3:
-                                get_3_star_character()
+                                character = get_3_star_character()
+                            player_characters[rarity].append(character)
+                        gacha_num -= 10
                     else:
                         print("You don't have enough draws. Please do single draws.")
 
@@ -376,28 +407,32 @@ def main():
             print(f"{weapon_banner}")
             draw_option = int(input("Do you want to do 1 or 10 draws? "))
             if draw_option == 1:
-                gacha_num -= 1
-                draw_animation()
-                if gacha_num > 0:
+                if gacha_num > 1:
+                    draw_animation()
                     rarity = weapon_gacha()
                     if rarity == 5:
-                        get_5_star_weapon()
+                        weapon = get_5_star_weapon()
                     elif rarity == 4:
-                        get_4_star_weapon()
+                        weapon = get_4_star_weapon()
                     elif rarity == 3:
-                        get_3_star_weapon()
+                        weapon = get_3_star_weapon()
+                    player_weapons[rarity].append(weapon)
+                    gacha_num -= 1
+                else:
+                    print("You don't have any more draws. Please play the game.")
                         
             elif draw_option == 10:
                 if gacha_num >= 10:
-                    gacha_num -= 10
                     for i in range(10):
                         rarity = weapon_gacha()
                         if rarity == 5:
-                            get_5_star_weapon()
+                            weapon = get_5_star_weapon()
                         elif rarity == 4:
-                            get_4_star_weapon()
+                            weapon = get_4_star_weapon()
                         elif rarity == 3:
-                            get_3_star_weapon()
+                            weapon = get_3_star_weapon()
+                        player_weapons[rarity].append(weapon)
+                    gacha_num -= 10
                 else:
                     print("You don't have enough draws. Please do single draws.")
 
@@ -433,6 +468,39 @@ def main():
             print("5. You can exit the game at any time by selecting the exit option.")
             print("6. Have fun and enjoy the game!")
             input("Press Enter to continue...")
+
+        elif option == 5:
+            print("Choose Your Battle:")
+            print("1. Luck Battle")
+            print("2. Strategy Battle")
+            print("3. Battle Guide")
+            print("4. Exit")
+            Battle_option = int(input())
+
+            if Battle_option == 1:
+                print("Luck Battle")
+                print(f"Number of 5 star characters: {len(player_characters[5])}")
+                print(f"Number of 4 star characters: {len(player_characters[4])}")   
+                print(f"Number of 3 star characters: {len(player_characters[3])}")
+                print(f"Number of 5 star weapons: {len(player_weapons[5])}")
+                print(f"Number of 4 star weapons: {len(player_weapons[4])}")
+                print(f"Number of 3 star weapons: {len(player_weapons[3])}")
+                points = (len(player_characters[5]) * 10) + (len(player_characters[4]) * 6) + (len(player_characters[3]) * 2) + (len(player_weapons[5]) * 10) + (len(player_weapons[4]) * 6) + (len(player_weapons[3]) * 2)
+                print(f"Your total points: {points}")
+
+            elif Battle_option == 2:
+                print("Under Construction")
+
+            elif Battle_option == 3:
+                print("Battle Guide:")
+                print("1. Luck Battle: In this battle, you win depending on how many rare characters/weapons you have.")
+                print("2. Strategy Battle: In this battle, you will need to use your characters and weapons to defeat your opponent with actual stats.")
+                print("3. You can exit the battle at any time by selecting the exit option.")
+                print("4. Have fun and enjoy the battle!")
+                input("Press Enter to continue...")
+
+            elif Battle_option == 4:
+                break
 
 
     print("HI!")
