@@ -7,32 +7,48 @@ def main():
     # Connect to server
     ip_address = input("Enter the server's IP address: ")
     port = int(input("Enter the server's port number: "))
-    client.connect((ip_address, port))
-    print("Connected to server")
 
-    # Receive and print welcome message
-    welcome_message = client.recv(1024).decode('utf-8')
-    print(welcome_message)
+    try:
+        client.connect((ip_address, port))
+        print("Connected to server")
 
-    while True:
-        # Receive prompt from server
-        prompt = client.recv(1024).decode('utf-8')
-        print(prompt, end='')
+        # Receive and print welcome message
+        welcome_message = client.recv(1024).decode('utf-8')
+        print(welcome_message)
 
-        # Get user input and send to server
-        user_input = input()
-        client.send(user_input.encode('utf-8'))
+        while True:
+            # Receive prompt from server
+            prompt = client.recv(1024).decode('utf-8')
+            if not prompt:  
+                print("Server closed the connection.")
+                break  
+            print(prompt, end='')
 
-        # Receive and print server response
-        response = client.recv(1024).decode('utf-8')
-        print(response)
+            # Get user input and send to server
+            user_input = input().strip()
+            if not user_input:  
+                print("Please enter a valid input.")
+                continue  
 
-        # Check if the server has indicated the end of the game
-        if "Summon Complete!" in response or "Exit" in response:
-            break
+            client.send(user_input.encode('utf-8'))
 
-    # Close the connection
-    client.close()
+            # Receive and print server response
+            response = client.recv(1024).decode('utf-8')
+            if not response:  
+                print("Server disconnected.")
+                break  
+            print(response)
+
+            if "Exit" in response:
+                break  
+                
+    except ConnectionResetError:
+        print("Connection lost. Server may have crashed or closed.")
+    except Exception as e:
+        print(f"Client error: {e}")
+    finally:
+        client.close()
+        print("Connection closed")
 
 if __name__ == "__main__":
     main()
