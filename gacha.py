@@ -4,11 +4,7 @@ import os
 
 class GachaGame:
     def display_intro():
-        intro_message = (
-            "Welcome to Generic Gacha Game!\n"
-            "If you're lucky you will have a nice time, if not give up.\n"
-        )
-        return intro_message
+        print("Welcome to Generic Gacha Game!\nIf you're lucky you will have a nice time, if not give up.\n")
 
     character_banner_art = """
         ☆ ✦ ✧ ✦ ☆ ✦ ✧ ✦ ☆ ✦                                       🌊 ~ ~ ~ 🌊 ~ ~ ~ 🌊 ~ ~ ~ 🌊    
@@ -72,102 +68,6 @@ class GachaGame:
 
         🌊 ~ ~ ~ 🌊 ~ ~ ~ 🌊 ~ ~ ~ 🌊
     """
-    weapon_banner = """
-                ☆ ✦ ✧ ✦ ☆ ✦ ✧ ✦ ☆ ✦ ✧ ✦ ☆  
-            ✧           𝑾𝒆𝒂𝒑𝒐𝒏 𝑩𝒂𝒏𝒏𝒆𝒓           ✧   
-                ☆ ✦ ✧ ✦ ☆ ✦ ✧ ✦ ☆ ✦ ✧ ✦ ☆  
-
-                                                    ______,....----,  
-                /VVVVVVVVVVVVVV|===================""""""""""""       ___,..-'  
-                `^^^^^^^^^^^^^^|======================----------""""""  
-                        
-
-                (                                   _  
-                    )                               /=>
-                (  +____________________/\/\___ / /|  
-                    .''._____________'._____      / /|/\  
-                : () :              :\ ----\|    \ )  
-                    '..'______________.'0|----|      \  
-                                    0_0/____/        \  
-                                        |----    /----\  
-                                    || -\\ --|      \  
-                                    ||   || ||\      \  
-                                        \\____// '|      \  
-                                                .'/       |  
-                                            .:/        |  
-                                            :/_________|  
-
-                    ┌──────────────────┐  
-                    │  🎟️ [1 Draw]      │  
-                    │  ✨ [10 Draw]    │  
-                    └──────────────────┘  
-
-            ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦  
-
-    """
-
-
-    # Animations
-
-    def clear_screen():
-        os.system('cls' if os.name == 'nt' else 'clear')
-
-    def draw_animation():
-        frames = [
-            """
-            ☆ ✦ ✧ ✦ ☆
-            .
-            """,
-            """
-            ☆ ✦ ✧ ✦ ☆
-            .* *.
-            """,
-            """
-            ☆ ✦ ✧ ✦ ☆
-        * ✧   ✦ *
-            """,
-            """
-            ☆ ✦ ✧ ✦ ☆
-        ✦   ✦ 🌙 ✦   ✦
-            """,
-            """
-            ☆ ✦ ✧ ✦ ☆
-        * ✧   ✦ *
-            .* *.
-            """,
-            """
-            ☆ ✦ ✧ ✦ ☆
-            ✦
-            """,
-            """
-            ┌───────────────┐
-            │  🎟️ Summoning... │
-            └───────────────┘
-            """,
-            """
-            ┌───────────────┐
-            │  ✨ 3-Star Item  │
-            └───────────────┘
-            """,
-            """
-            ┌───────────────┐
-            │  🌟 4-Star Item  │
-            └───────────────┘
-            """,
-            """
-            ┌───────────────┐
-            │  🌟🌟🌟 5-Star!  │
-            └───────────────┘
-            """,
-        ]
-        
-        for frame in frames:
-            GachaGame.clear_screen()
-            print(frame)
-            time.sleep(0.5)
-        
-        print("✨ Summon Complete! ✨")
-
 
     # Functions
 
@@ -178,16 +78,7 @@ class GachaGame:
         except ValueError:
             print("Invalid input. Please enter a valid number.")
 
-    def char_gacha():
-        number = random.randint(1, 1000)
-        if number <= 5:
-            return 5
-        elif number <= 100:
-            return 4
-        elif number > 100:
-            return 3
-
-    def weapon_gacha():
+    def rarity():
         number = random.randint(1, 1000)
         if number <= 5:
             return 5
@@ -200,13 +91,10 @@ class GachaGame:
         # Attributes: (Name, Strength, Health, Special Move, Special Cooldown)
         random_character = random.randint(1, 3)
         if random_character == 1:
-            print("You got Dragon Deez! (5 Star)")
             return "Dragon Deez", 20, 150, "Draggin Deez Nuts", 2
         elif random_character == 2:
-            print("You got Ninja! (5 Star)")
             return "Ninja", 18, 140, "LOWWWWW", 3
         elif random_character == 3:
-            print("You got Cave Diver! (5 Star)")
             return "Cave Diver", 16, 130, "Cave Divers When They:", 4
 
     def get_5_star_ocean_character():
